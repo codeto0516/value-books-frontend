@@ -1,7 +1,8 @@
 // Component Imports
+import NotFound from '@features/NotFound'
+
 import Providers from '@components/Providers'
 import BlankLayout from '@layouts/BlankLayout'
-import NotFound from '@views/NotFound'
 
 // Util Imports
 import { getSystemMode, getServerMode } from '@core/utils/serverHelpers'

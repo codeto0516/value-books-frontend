@@ -44,7 +44,7 @@
         "./src/shared/components/*"
       ],
       "@configs/*": [
-        "./src/shared//configs/*"
+        "./src/base/configs/*"
       ],
       "@features/*": [
         "./src/features/*"

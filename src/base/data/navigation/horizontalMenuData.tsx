@@ -1,5 +1,5 @@
 // Type Imports
-import type { HorizontalMenuDataType } from '@/types/menuTypes'
+import type { HorizontalMenuDataType } from '@/shared/types/menuTypes'
 
 const horizontalMenuData = (): HorizontalMenuDataType[] => [
   {

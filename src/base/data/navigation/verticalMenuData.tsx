@@ -1,5 +1,5 @@
 // Type Imports
-import type { VerticalMenuDataType } from '@/types/menuTypes'
+import type { VerticalMenuDataType } from '@/shared/types/menuTypes'
 
 const verticalMenuData = (): VerticalMenuDataType[] => [
   {
