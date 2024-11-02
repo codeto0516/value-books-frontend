@@ -6,7 +6,7 @@ const config: Config = {
     preflight: false
   },
   important: '#__next',
-  plugins: [require('tailwindcss-logical'), require('./src/base/@core/tailwind/plugin')],
+  plugins: [require('tailwindcss-logical'), require('./src/core/@core/tailwind/plugin')],
   theme: {
     extend: {}
   }

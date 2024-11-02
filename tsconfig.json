@@ -29,22 +29,22 @@
         "./src/*"
       ],
       "@core/*": [
-        "./src/base/@core/*"
+        "./src/core/@core/*"
       ],
       "@layouts/*": [
-        "./src/base/@layouts/*"
+        "./src/core/@layouts/*"
       ],
       "@menu/*": [
-        "./src/base/@menu/*"
+        "./src/core/@menu/*"
       ],
       "@assets/*": [
-        "./src/base/assets/*"
+        "./src/core/assets/*"
       ],
       "@components/*": [
         "./src/shared/components/*"
       ],
       "@configs/*": [
-        "./src/base/configs/*"
+        "./src/core/configs/*"
       ],
       "@features/*": [
         "./src/features/*"
