@@ -29,25 +29,25 @@
         "./src/*"
       ],
       "@core/*": [
-        "./src/@core/*"
+        "./src/base/@core/*"
       ],
       "@layouts/*": [
-        "./src/@layouts/*"
+        "./src/base/@layouts/*"
       ],
       "@menu/*": [
-        "./src/@menu/*"
+        "./src/base/@menu/*"
       ],
       "@assets/*": [
-        "./src/assets/*"
+        "./src/base/assets/*"
       ],
       "@components/*": [
-        "./src/components/*"
+        "./src/shared/components/*"
       ],
       "@configs/*": [
-        "./src/configs/*"
+        "./src/shared//configs/*"
       ],
-      "@views/*": [
-        "./src/views/*"
+      "@features/*": [
+        "./src/features/*"
       ]
     }
   },
