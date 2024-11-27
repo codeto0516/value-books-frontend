@@ -14,7 +14,7 @@ import type {
   HorizontalMenuDataType,
   HorizontalSubMenuDataType,
   HorizontalMenuItemDataType
-} from '@/types/menuTypes'
+} from '@/shared/types/menuTypes'
 
 // Component Imports
 import { SubMenu as HorizontalSubMenu, MenuItem as HorizontalMenuItem } from '@menu/horizontal-menu'
@@ -48,7 +48,7 @@ export const GenerateVerticalMenu = ({ menuData }: { menuData: VerticalMenuDataT
       if (subMenuItem.children) {
         const { children, icon, prefix, suffix, ...rest } = subMenuItem
 
-        const Icon = icon ? <i className={icon} /> : null
+        const Icon = typeof icon === 'string' ? <i className={icon} /> : (icon ?? null)
 
         const subMenuPrefix: ReactNode =
           prefix && (prefix as ChipProps).label ? (
@@ -84,7 +84,7 @@ export const GenerateVerticalMenu = ({ menuData }: { menuData: VerticalMenuDataT
       // Localize the href
       const href = rest.href
 
-      const Icon = icon ? <i className={icon} /> : null
+      const Icon = typeof icon === 'string' ? <i className={icon} /> : (icon ?? null)
 
       const menuItemPrefix: ReactNode =
         prefix && (prefix as ChipProps).label ? <Chip size='small' {...(prefix as ChipProps)} /> : (prefix as ReactNode)
@@ -124,7 +124,7 @@ export const GenerateHorizontalMenu = ({ menuData }: { menuData: HorizontalMenuD
       if (subMenuItem.children) {
         const { children, icon, prefix, suffix, ...rest } = subMenuItem
 
-        const Icon = icon ? <i className={icon} /> : null
+        const Icon = typeof icon === 'string' ? <i className={icon} /> : (icon ?? null)
 
         const subMenuPrefix: ReactNode =
           prefix && (prefix as ChipProps).label ? (
@@ -160,7 +160,7 @@ export const GenerateHorizontalMenu = ({ menuData }: { menuData: HorizontalMenuD
       // Localize the href
       const href = rest.href
 
-      const Icon = icon ? <i className={icon} /> : null
+      const Icon = typeof icon === 'string' ? <i className={icon} /> : (icon ?? null)
 
       const menuItemPrefix: ReactNode =
         prefix && (prefix as ChipProps).label ? <Chip size='small' {...(prefix as ChipProps)} /> : (prefix as ReactNode)

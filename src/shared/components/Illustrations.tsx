@@ -91,9 +91,10 @@ const Illustrations = (props: IllustrationsProp) => {
         )}
       </>
     )
-  } else {
-    return null
-  }
+  } 
+    
+return null
+  
 }
 
 export default Illustrations

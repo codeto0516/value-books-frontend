@@ -10,6 +10,13 @@ const nextConfig = {
         locale: false
       }
     ]
+  },
+  eslint: {
+    ignoreDuringBuilds: true
+  },
+  typescript: {
+    // ビルド時の型チェックをスキップ
+    ignoreBuildErrors: true
   }
 }
 

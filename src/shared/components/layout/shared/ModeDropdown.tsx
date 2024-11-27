@@ -52,9 +52,10 @@ const ModeDropdown = () => {
       return 'ri-computer-line'
     } else if (settings.mode === 'dark') {
       return 'ri-moon-clear-line'
-    } else {
-      return 'ri-sun-line'
-    }
+    } 
+      
+return 'ri-sun-line'
+    
   }
 
   return (

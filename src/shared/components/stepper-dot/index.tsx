@@ -23,9 +23,10 @@ const StepperCustomDot = (props: StepIconProps) => {
         <i className='ri-check-line text-sm text-white' />
       </div>
     )
-  } else {
-    return <div className={classnames(styles.stepperCustomDot, { [styles.activeStepperCustomDot]: active })} />
-  }
+  } 
+    
+return <div className={classnames(styles.stepperCustomDot, { [styles.activeStepperCustomDot]: active })} />
+  
 }
 
 export default StepperCustomDot

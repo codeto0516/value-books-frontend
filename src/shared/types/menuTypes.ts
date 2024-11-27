@@ -1,5 +1,5 @@
 // React Imports
-import type { ReactNode } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 
 // MUI Imports
 import type { ChipProps } from '@mui/material/Chip'
@@ -24,13 +24,13 @@ export type VerticalMenuItemDataType = Omit<
   MenuItemExactMatchUrlProps & {
     label: ReactNode
     excludeLang?: boolean
-    icon?: string
+    icon?: string | ReactElement
     prefix?: ReactNode | ChipProps
     suffix?: ReactNode | ChipProps
   }
 export type VerticalSubMenuDataType = Omit<VerticalSubMenuProps, 'children' | 'icon' | 'prefix' | 'suffix'> & {
   children: VerticalMenuDataType[]
-  icon?: string
+  icon?: string | ReactElement
   prefix?: ReactNode | ChipProps
   suffix?: ReactNode | ChipProps
 }
@@ -48,13 +48,13 @@ export type HorizontalMenuItemDataType = Omit<
   MenuItemExactMatchUrlProps & {
     label: ReactNode
     excludeLang?: boolean
-    icon?: string
+    icon?: string | ReactElement
     prefix?: ReactNode | ChipProps
     suffix?: ReactNode | ChipProps
   }
 export type HorizontalSubMenuDataType = Omit<HorizontalSubMenuProps, 'children' | 'icon' | 'prefix' | 'suffix'> & {
   children: HorizontalMenuDataType[]
-  icon?: string
+  icon?: string | ReactElement
   prefix?: ReactNode | ChipProps
   suffix?: ReactNode | ChipProps
 }
