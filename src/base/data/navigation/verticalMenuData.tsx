@@ -4,77 +4,74 @@ import {
   PostFeatureIcon,
   CategoryFeatureIcon,
   MediaFeatureIcon,
-  StaffFeatureIcon,
-  GeneralSettingFeatureIcon,
-  HomepageSettingFeatureIcon,
-  UsageFeatureIcon,
-  ContactFeatureIcon
+  StaffFeatureIcon
 } from '@/shared/components/icon'
+import { CiShoppingTag } from 'react-icons/ci'
+import { IoMdBook } from 'react-icons/io'
+import { TbReportMoney } from 'react-icons/tb'
 
-const verticalMenuData = (): VerticalMenuDataType[] => [
-  {
-    label: 'ダッシュボード',
-    href: '/',
-    icon: <DashboardFeatureIcon />
-  },
-  {
-    label: '機能一覧',
-    isSection: true,
-    children: [
-      {
-        label: '記事投稿管理',
-        href: '/post',
-        icon: <PostFeatureIcon />
-      },
-      {
-        label: 'カテゴリー管理',
-        href: '/category',
-        icon: <CategoryFeatureIcon />
-      },
-      {
-        label: 'メディア管理',
-        href: '/media',
-        icon: <MediaFeatureIcon />
-      },
-      {
-        label: 'スタッフ管理',
-        href: '/staff',
-        icon: <StaffFeatureIcon />
-      }
-    ]
-  },
-  {
-    label: '各種設定',
-    isSection: true,
-    children: [
-      {
-        label: '一般設定',
-        href: '/setting/general',
-        icon: <GeneralSettingFeatureIcon />
-      },
-      {
-        label: 'ホームページ設定',
-        href: '/setting/homepage',
-        icon: <HomepageSettingFeatureIcon />
-      }
-    ]
-  },
-  {
-    label: 'その他',
-    isSection: true,
-    children: [
-      {
-        label: '使い方ガイド',
-        href: '/usage',
-        icon: <UsageFeatureIcon />
-      },
-      {
-        label: 'お問い合わせ',
-        href: '/contact',
-        icon: <ContactFeatureIcon />
-      }
-    ]
-  }
-]
+const verticalMenuData = ({ isAdmin }: { isAdmin: boolean }): VerticalMenuDataType[] =>
+  isAdmin
+    ? [
+        {
+          label: 'ダッシュボード',
+          href: 'admin/',
+          icon: <DashboardFeatureIcon />
+        },
+        {
+          label: '機能一覧',
+          isSection: true,
+          children: [
+            {
+              label: '購入管理',
+              href: '/purchase',
+              icon: <PostFeatureIcon />
+            },
+            {
+              label: '書籍管理',
+              href: '/book',
+              icon: <CategoryFeatureIcon />
+            },
+            {
+              label: '予算管理',
+              href: '/budget',
+              icon: <MediaFeatureIcon />
+            },
+            {
+              label: '社員管理',
+              href: '/employee',
+              icon: <StaffFeatureIcon />
+            }
+          ]
+        }
+      ]
+    : [
+        {
+          label: 'ダッシュボード',
+          href: '/',
+          icon: <DashboardFeatureIcon />
+        },
+        {
+          label: '機能一覧',
+          isSection: true,
+          children: [
+            {
+              label: '購入管理',
+              href: '/post',
+              icon: <TbReportMoney />
+            },
+            {
+              label: '書籍管理',
+              href: '/category',
+              icon: <IoMdBook />
+            },
+            {
+              label: 'タグ管理',
+              href: '/category',
+              icon: <CiShoppingTag />
+            }
+          ]
+        }
+      ]
 
 export default verticalMenuData

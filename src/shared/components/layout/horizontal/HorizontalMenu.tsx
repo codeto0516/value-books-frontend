@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles'
 import type { VerticalMenuContextProps } from '@menu/components/vertical-menu/Menu'
 
 // Component Imports
-import HorizontalNav, { Menu, MenuItem } from '@menu/horizontal-menu'
+import HorizontalNav, { Menu } from '@menu/horizontal-menu'
 import VerticalNavContent from './VerticalNavContent'
 
 // Hook Imports
@@ -22,6 +22,9 @@ import menuItemStyles from '@core/styles/horizontal/menuItemStyles'
 import verticalNavigationCustomStyles from '@core/styles/vertical/navigationCustomStyles'
 import verticalMenuItemStyles from '@core/styles/vertical/menuItemStyles'
 import verticalMenuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import { GenerateHorizontalMenu } from '../../GenerateMenu'
+import horizontalMenuData from '@/base/data/navigation/horizontalMenuData'
+import { usePathname } from 'next/navigation'
 
 type RenderExpandIconProps = {
   level?: number
@@ -45,6 +48,9 @@ const RenderVerticalExpandIcon = ({ open, transitionDuration }: RenderVerticalEx
 )
 
 const HorizontalMenu = () => {
+  const pathName = usePathname()
+  const isAdmin = pathName.includes('/admin')
+
   // Hooks
   const verticalNavOptions = useVerticalNav()
   const theme = useTheme()
@@ -64,7 +70,7 @@ const HorizontalMenu = () => {
           skin === 'bordered' ? 'var(--mui-palette-background-paper)' : 'var(--mui-palette-background-default)'
       }}
     >
-      <Menu
+      {/* <Menu
         rootStyles={menuRootStyles(theme)}
         renderExpandIcon={({ level }) => <RenderExpandIcon level={level} />}
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
@@ -88,9 +94,9 @@ const HorizontalMenu = () => {
         <MenuItem href='/about' icon={<i className='ri-information-line' />}>
           About
         </MenuItem>
-      </Menu>
+      </Menu> */}
 
-      {/* <Menu
+      <Menu
         rootStyles={menuRootStyles(theme)}
         renderExpandIcon={({ level }) => <RenderExpandIcon level={level} />}
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
@@ -108,8 +114,8 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        <GenerateHorizontalMenu menuData={menuData(dictionary)} />
-      </Menu> */}
+        <GenerateHorizontalMenu menuData={horizontalMenuData({ isAdmin })} />
+      </Menu>
     </HorizontalNav>
   )
 }

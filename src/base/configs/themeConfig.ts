@@ -51,12 +51,12 @@ export type Config = {
 
 const themeConfig: Config = {
   templateName: 'Materio',
-  homePageUrl: '/home',
+  homePageUrl: '/',
   settingsCookieName: 'materio-mui-next-demo',
   mode: 'system', // 'system', 'light', 'dark'
   skin: 'bordered', // 'default', 'bordered'
-  semiDark: true, // true, false
-  layout: 'vertical', // 'vertical', 'collapsed', 'horizontal'
+  semiDark: false, // true, false
+  layout: 'horizontal', // 'vertical', 'collapsed', 'horizontal'
   layoutPadding: 24, // Common padding for header, content, footer layout components (in px)
   compactContentWidth: 1440, // in px
   navbar: {

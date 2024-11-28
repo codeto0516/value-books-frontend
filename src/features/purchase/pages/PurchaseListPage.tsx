@@ -15,13 +15,12 @@ import { TbFilterDown, TbFilterUp } from 'react-icons/tb'
 import { useState } from 'react'
 import { cn } from '@/shared/utils/cn'
 import { PageLayout } from '@/shared/components/layout/page/PageLayout'
-import type { Post } from '../types/Post'
-import { postDemoData } from '../constants/demoData'
-import { PostStatusCards } from '../constants/PostStatusCards'
+import type { Purchase } from '../types/Purchase'
+import { purchaseDemoData } from '../constants/demoData'
 
-export const PostListPage = () => {
-  const columnDef = useColumnDef<Post>()
-  const columnHelper = createColumnHelper<Post>()
+export const PurchaseListPage = () => {
+  const columnDef = useColumnDef<Purchase>()
+  const columnHelper = createColumnHelper<Purchase>()
 
   const columns = [
     columnHelper.display({
@@ -42,13 +41,13 @@ export const PostListPage = () => {
           color: (() => {
             switch (row.original.statusId) {
               case 1:
-                return 'default'
+                return 'secondary'
               case 2:
-                return 'primary'
+                return 'info'
               case 3:
                 return 'success'
               default:
-                return 'default'
+                return 'secondary'
             }
           })()
         })
@@ -56,25 +55,26 @@ export const PostListPage = () => {
       maxSize: 100,
       minSize: 100
     }),
-    columnHelper.accessor('title', {
+    columnHelper.accessor('bookName', {
       header: columnDef.header({ value: 'タイトル', sortable: true }),
       cell: columnDef.cell({ variant: 'text', align: 'left' }),
       minSize: 200
     }),
-    columnHelper.accessor(
-      row => {
-        return row.categories.map(Post => Post.name).join(', ')
-      },
-      {
-        id: 'categories',
-        header: columnDef.header({ value: 'カテゴリー', sortable: true }),
-        cell: columnDef.cell({ variant: 'text', align: 'left' }),
-        maxSize: 150,
-        minSize: 150
-      }
-    ),
-    columnHelper.accessor('updatedTenantUserName', {
-      header: columnDef.header({ value: '最終更新者', align: 'center', sortable: true }),
+
+    // columnHelper.accessor(
+    //   row => {
+    //     return row.categories.map(Purchase => Purchase.name).join(', ')
+    //   },
+    //   {
+    //     id: 'categories',
+    //     header: columnDef.header({ value: 'カテゴリー', sortable: true }),
+    //     cell: columnDef.cell({ variant: 'text', align: 'left' }),
+    //     maxSize: 150,
+    //     minSize: 150
+    //   }
+    // ),
+    columnHelper.accessor('requestedUserName', {
+      header: columnDef.header({ value: '申請者', align: 'center', sortable: true }),
       cell: columnDef.cell({ variant: 'avatar', align: 'center', src: '/images/avatars/1.png' }),
       maxSize: 100,
       minSize: 100
@@ -92,7 +92,7 @@ export const PostListPage = () => {
         variant: 'action',
         align: 'right',
         actions: ({ row }) => [
-          <Link key='edit' href={`/post/${row.original.id}`}>
+          <Link key='edit' href={`/Purchase/${row.original.id}`}>
             <EditIconButton />
           </Link>
         ]
@@ -102,18 +102,22 @@ export const PostListPage = () => {
     })
   ]
 
-  const { table } = useDataTable<Post>({
-    data: postDemoData,
+  const { table } = useDataTable<Purchase>({
+    data: purchaseDemoData,
     columns
   })
 
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
 
   return (
-    <PageLayout icon={<PostFeatureIcon />} title='記事投稿管理' breadcrumb={[{ label: '記事投稿管理', href: '/post' }]}>
-      <Grid container spacing={4}>
+    <PageLayout
+      icon={<PostFeatureIcon />}
+      title='記事投稿管理'
+      breadcrumb={[{ label: '記事投稿管理', href: '/Purchase' }]}
+    >
+      {/* <Grid container spacing={4}>
         <PostStatusCards />
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <DataTable
           table={table}

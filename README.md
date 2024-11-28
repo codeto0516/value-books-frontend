@@ -1,34 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## 概要
+このWebアプリはバリューページ専用の書籍管理アプリです。
+主な機能としては以下の通りです。
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- 一般ユーザー
+  - 書籍管理
+    - 書籍の検索
+      - Google Books APIを使用して書籍を検索します。
+    - 書籍の登録
+      - 書籍を登録します。
+    - 書籍の編集
+    - 書籍の削除
+  - 購入管理
+    - 購入申請
+      - 購入日
+      - 購入金額
+      - ステータス
+        - 下書き 
+        - 承認待ち
+        - 承認済み
+    - 購入申請の編集
+    - 購入申請の削除
+  
+- 管理者
+  - ダッシュボード
+    - ユーザー数
+    - 書籍数
+    - 購入申請数
+  - ユーザー管理
+    - ユーザーの一覧表示
+    - ユーザーの登録
+    - ユーザーの編集
+    - ユーザーの削除
+  - 書籍管理
+    - 書籍の一覧表示
+    - 書籍の登録
+    - 書籍の編集
+    - 書籍の削除
+  - 購入管理
+    - 購入申請の一覧表示
+    - 購入申請の承認
+    - 購入申請の削除
+  - 予算管理
+    - 予算の一覧表示
+    - 予算の登録
+    - 予算の編集
+    - 予算の削除
+  - レポート

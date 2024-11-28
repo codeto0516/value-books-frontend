@@ -23,6 +23,7 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Style Imports
 import navigationCustomStyles from '@core/styles/vertical/navigationCustomStyles'
+import { usePathname } from 'next/navigation'
 
 type Props = {
   mode: Mode
@@ -48,6 +49,9 @@ const StyledBoxForShadow = styled('div')(({ theme }) => ({
 }))
 
 const Navigation = (props: Props) => {
+  const pathName = usePathname()
+  const isAdmin = pathName.includes('/admin')
+
   // Props
   const { mode, systemMode } = props
 
@@ -127,7 +131,7 @@ const Navigation = (props: Props) => {
         )}
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
-      <VerticalMenu scrollMenu={scrollMenu} />
+      <VerticalMenu isAdmin={isAdmin} scrollMenu={scrollMenu} />
     </VerticalNav>
   )
 }

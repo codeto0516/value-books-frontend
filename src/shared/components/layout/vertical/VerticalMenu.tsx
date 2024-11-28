@@ -28,6 +28,7 @@ type RenderExpandIconProps = {
 }
 
 type Props = {
+  isAdmin: boolean
   scrollMenu: (container: any, isPerfectScrollbar: boolean) => void
 }
 
@@ -37,7 +38,7 @@ const RenderExpandIcon = ({ open, transitionDuration }: RenderExpandIconProps) =
   </StyledVerticalNavExpandIcon>
 )
 
-const VerticalMenu = ({ scrollMenu }: Props) => {
+const VerticalMenu = ({ isAdmin, scrollMenu }: Props) => {
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
@@ -84,7 +85,7 @@ const VerticalMenu = ({ scrollMenu }: Props) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-line' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <GenerateVerticalMenu menuData={verticalMenuData()} />
+        <GenerateVerticalMenu menuData={verticalMenuData({ isAdmin })} />
       </Menu>
     </ScrollWrapper>
   )
