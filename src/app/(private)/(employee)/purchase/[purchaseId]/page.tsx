@@ -1,5 +1,5 @@
-import { PurchaseEditPage } from '@/features/purchase/pages/PurchaseEditPage'
+import { PurchaseDetailPage } from '@/features/purchase/pages/PurchaseDetailPage'
 
-export default function Page() {
-  return <PurchaseEditPage />
+export default function Page({ params }: { params: { purchaseId: string } }) {
+  return <PurchaseDetailPage purchaseId={params.purchaseId} />
 }

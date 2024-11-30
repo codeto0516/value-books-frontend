@@ -266,7 +266,7 @@ export const useColumnDef = <TData,>() => {
             const convertedValue = row.getValue(column.id) as string
 
             return (
-              <div className={cn(getTextAlignClass(props.align))}>
+              <div className={cn(getTextAlignClass(props.align), 'whitespace-break-spaces')}>
                 {props.transform
                   ? props.transform({ value: convertedValue, row, column, table })
                   : props.value || props.defaultValue || convertedValue}

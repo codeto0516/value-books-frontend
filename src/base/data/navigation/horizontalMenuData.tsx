@@ -2,10 +2,10 @@
 
 import {
   DashboardFeatureIcon,
-  PostFeatureIcon,
   CategoryFeatureIcon,
   MediaFeatureIcon,
-  StaffFeatureIcon
+  StaffFeatureIcon,
+  PurchaseFeatureIcon
 } from '@/shared/components/icon'
 import type { HorizontalMenuDataType } from '@/shared/types/menuTypes'
 import { CiShoppingTag } from 'react-icons/ci'
@@ -23,7 +23,7 @@ const horizontalMenuData = ({ isAdmin }: { isAdmin: boolean }): HorizontalMenuDa
         {
           label: '購入管理',
           href: '/purchase',
-          icon: <PostFeatureIcon />
+          icon: <PurchaseFeatureIcon />
         },
         {
           label: '書籍管理',

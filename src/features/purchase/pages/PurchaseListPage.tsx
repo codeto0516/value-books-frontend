@@ -1,36 +1,63 @@
 'use client'
 
-import { Button, Select, TextField, IconButton, Grid } from '@mui/material'
+import { Button, Select, Grid, TextField, Typography, IconButton } from '@mui/material'
 import { DataTable } from '@/shared/components/data-table'
 import { useDataTable } from '@/shared/components/data-table/hooks/useDataTable'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useColumnDef } from '@/shared/components/data-table/hooks/useColumnDef'
-import { EditIconButton } from '@/shared/components/button/IconButtons'
-import Link from 'next/link'
 import { DataTableSearchBar } from '@/shared/components/data-table/components/DataTableSearchBar'
-import { DataTablePagination } from '@/shared/components/data-table/components/DataTablePagination'
 import { DataTableCheckboxActions } from '@/shared/components/data-table/components/DataTableCheckboxActions'
-import { NewIcon, PostFeatureIcon, PublishedIcon, UnPublishedIcon } from '@/shared/components/icon'
-import { TbFilterDown, TbFilterUp } from 'react-icons/tb'
+import { NewIcon, PublishedIcon, PurchaseFeatureIcon, UnPublishedIcon } from '@/shared/components/icon'
 import { useState } from 'react'
 import { cn } from '@/shared/utils/cn'
 import { PageLayout } from '@/shared/components/layout/page/PageLayout'
 import type { Purchase } from '../types/Purchase'
 import { purchaseDemoData } from '../constants/demoData'
+import { FaSearch } from 'react-icons/fa'
+import { useRouter } from 'next/navigation'
 
 export const PurchaseListPage = () => {
+  const router = useRouter()
   const columnDef = useColumnDef<Purchase>()
   const columnHelper = createColumnHelper<Purchase>()
 
   const columns = [
-    columnHelper.display({
-      id: 'selection',
-      header: columnDef.header({ variant: 'checkbox' }),
+    // columnHelper.display({
+    //   id: 'selection',
+    //   header: columnDef.header({ variant: 'checkbox' }),
+    //   cell: columnDef.cell({
+    //     variant: 'checkbox'
+    //   }),
+    //   maxSize: 50,
+    //   minSize: 50
+    // }),
+
+    columnHelper.accessor('bookName', {
+      header: columnDef.header({ value: 'タイトル', sortable: true }),
       cell: columnDef.cell({
-        variant: 'checkbox'
+        variant: 'text',
+        align: 'left',
+        transform: ({ row }) => {
+          return (
+            <div className='flex gap-2 items-center'>
+              <img src={row.original.bookThumbnail} className='w-16 h-16 object-contain' />
+              <div>
+                <Typography variant='body1'>{row.original.bookName}</Typography>
+                <Typography variant='caption'>{row.original.bookAuthor}</Typography>
+              </div>
+            </div>
+          )
+        }
       }),
-      maxSize: 50,
-      minSize: 50
+      minSize: 400
+    }),
+    columnHelper.accessor('amount', {
+      header: columnDef.header({ value: '金額', align: 'center', sortable: true }),
+      cell: columnDef.cell({
+        variant: 'number',
+        align: 'center'
+      }),
+      minSize: 100
     }),
     columnHelper.accessor('status', {
       header: columnDef.header({ value: 'ステータス', sortable: true }),
@@ -55,11 +82,6 @@ export const PurchaseListPage = () => {
       maxSize: 100,
       minSize: 100
     }),
-    columnHelper.accessor('bookName', {
-      header: columnDef.header({ value: 'タイトル', sortable: true }),
-      cell: columnDef.cell({ variant: 'text', align: 'left' }),
-      minSize: 200
-    }),
 
     // columnHelper.accessor(
     //   row => {
@@ -79,27 +101,28 @@ export const PurchaseListPage = () => {
       maxSize: 100,
       minSize: 100
     }),
-    columnHelper.accessor('updatedAt', {
-      header: columnDef.header({ value: '最終更新日', align: 'center', sortable: true }),
+    columnHelper.accessor('createdAt', {
+      header: columnDef.header({ value: '申請日', align: 'center', sortable: true }),
       cell: columnDef.cell({ variant: 'date', align: 'center' }),
       maxSize: 100,
       minSize: 100
-    }),
-    columnHelper.display({
-      id: 'action',
-      header: columnDef.header({ value: '' }),
-      cell: columnDef.cell({
-        variant: 'action',
-        align: 'right',
-        actions: ({ row }) => [
-          <Link key='edit' href={`/Purchase/${row.original.id}`}>
-            <EditIconButton />
-          </Link>
-        ]
-      }),
-      maxSize: 50,
-      minSize: 50
     })
+
+    // columnHelper.display({
+    //   id: 'action',
+    //   header: columnDef.header({ value: '' }),
+    //   cell: columnDef.cell({
+    //     variant: 'action',
+    //     align: 'right',
+    //     actions: ({ row }) => [
+    //       <Link key='edit' href={`/Purchase/${row.original.id}`}>
+    //         <EditIconButton />
+    //       </Link>
+    //     ]
+    //   }),
+    //   maxSize: 50,
+    //   minSize: 50
+    // })
   ]
 
   const { table } = useDataTable<Purchase>({
@@ -110,14 +133,7 @@ export const PurchaseListPage = () => {
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
 
   return (
-    <PageLayout
-      icon={<PostFeatureIcon />}
-      title='記事投稿管理'
-      breadcrumb={[{ label: '記事投稿管理', href: '/Purchase' }]}
-    >
-      {/* <Grid container spacing={4}>
-        <PostStatusCards />
-      </Grid> */}
+    <PageLayout icon={<PurchaseFeatureIcon />} title='購入管理'>
       <Grid item xs={12}>
         <DataTable
           table={table}
@@ -128,26 +144,27 @@ export const PurchaseListPage = () => {
                 <TextField
                   key='status'
                   variant='outlined'
-                  placeholder='キーワード検索'
+                  placeholder='Search'
                   className='w-[200px]'
                   size='small'
                   InputLabelProps={{
                     shrink: true
                   }}
-                />,
-                isFilterOpen ? (
-                  <IconButton key={'filter'} onClick={() => setIsFilterOpen(false)}>
-                    <TbFilterUp />
-                  </IconButton>
-                ) : (
-                  <IconButton key={'filter'} onClick={() => setIsFilterOpen(true)}>
-                    <TbFilterDown />
-                  </IconButton>
-                )
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton aria-label='' onClick={() => {}} size='small'>
+                        <FaSearch size={14} />
+                      </IconButton>
+                    )
+                  }}
+                  onChange={e => {
+                    table.setGlobalFilter(e.target.value || undefined)
+                  }}
+                />
               ]}
               actions={[
                 <Button key='new' variant='contained' color='primary' startIcon={<NewIcon />}>
-                  新作作成
+                  新規申請
                 </Button>
               ]}
             />,
@@ -210,10 +227,15 @@ export const PurchaseListPage = () => {
                   // />
                 ]}
               />
-              <DataTablePagination table={table} />
+              {/* <DataTablePagination table={table} /> */}
             </div>
           ]}
-          tableBottom={[<DataTablePagination key='bottom-pagination' table={table} />]}
+          // tableBottom={[<DataTablePagination key='bottom-pagination' table={table} />]}
+
+          getBodyRowProps={row => ({
+            className: 'hover:bg-actionHover cursor-pointer',
+            onClick: () => router.push(`/purchase/${row.original.id}`)
+          })}
         />
       </Grid>
     </PageLayout>

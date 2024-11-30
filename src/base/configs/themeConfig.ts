@@ -55,8 +55,8 @@ const themeConfig: Config = {
   settingsCookieName: 'materio-mui-next-demo',
   mode: 'system', // 'system', 'light', 'dark'
   skin: 'bordered', // 'default', 'bordered'
-  semiDark: false, // true, false
-  layout: 'horizontal', // 'vertical', 'collapsed', 'horizontal'
+  semiDark: true, // true, false
+  layout: 'collapsed', // 'vertical', 'collapsed', 'horizontal'
   layoutPadding: 24, // Common padding for header, content, footer layout components (in px)
   compactContentWidth: 1440, // in px
   navbar: {

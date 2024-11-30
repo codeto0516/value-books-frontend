@@ -22,7 +22,7 @@ interface PageHeaderProps {
   children: React.ReactNode
   title?: React.ReactElement | string | undefined | null
   icon?: React.ReactElement | undefined | null
-  breadcrumb: PageBreadCrumb[]
+  breadcrumb?: PageBreadCrumb[]
   actions?: PageAction[]
   backHref?: string
   AlertComponent?: React.ReactElement[]
@@ -52,7 +52,7 @@ export const PageLayout = memo(
 
     return (
       <Suspense fallback={<Loading />}>
-        <Grid container gap={4}>
+        <Grid container gap={4} className='mx-auto max-w-[1280px]'>
           <Grid item container xs={12} className='flex flex-col gap-0'>
             <div className='flex flex-col sm:flex-row gap-2 justify-between w-full'>
               <PageBreadCrumb breadcrumb={memoizedBreadcrumb} />

@@ -1,5 +1,5 @@
 import type { ColumnDef, SortingState, TableOptions } from '@tanstack/react-table'
-import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
+import { getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 
@@ -19,14 +19,14 @@ export function useDataTable<DataType>({ data, columns }: Props<DataType>) {
   )
 
   // ページネーション関連
-  tableOptions.manualPagination = false
-  tableOptions.getPaginationRowModel = getPaginationRowModel()
-  tableOptions.initialState = {
-    ...tableOptions.initialState,
-    pagination: {
-      pageSize: 5
-    }
-  }
+  // tableOptions.manualPagination = false
+  // tableOptions.getPaginationRowModel = getPaginationRowModel()
+  // tableOptions.initialState = {
+  //   ...tableOptions.initialState,
+  //   pagination: {
+  //     pageSize: 5
+  //   }
+  // }
 
   // フィルター関連
   tableOptions.filterFns = {

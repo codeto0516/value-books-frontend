@@ -1,6 +1,6 @@
 import Card from '@mui/material/Card'
 import { flexRender } from '@tanstack/react-table'
-import type { Table } from '@tanstack/react-table'
+import type { Row, Table } from '@tanstack/react-table'
 
 import styles from '@core/styles/table.module.css'
 import { Fragment, type ReactElement } from 'react'
@@ -11,14 +11,15 @@ interface Props<DataType> {
   table: Table<DataType>
   tableTop?: (ReactElement | null | undefined | false)[]
   tableBottom?: (ReactElement | null | undefined | false)[]
+  getBodyRowProps?: (row: Row<DataType>) => Record<string, unknown>
 }
 
-export const DataTable = <DataType,>({ table, tableTop, tableBottom }: Props<DataType>) => {
+export const DataTable = <DataType,>({ table, tableTop, tableBottom, getBodyRowProps }: Props<DataType>) => {
   return (
-    <Card className='w-full'>
+    <Card className='w-full border-none'>
       {tableTop?.map((element, index) => (
         <Fragment key={`table-top-element-${index}`}>
-          {element && index > 0 ? <Divider /> : null}
+          {/* {element && index > 0 ? <Divider /> : null} */}
           {element}
         </Fragment>
       ))}
@@ -26,12 +27,13 @@ export const DataTable = <DataType,>({ table, tableTop, tableBottom }: Props<Dat
         <table className={cn(styles.table, 'table-fixed')}>
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
+              <tr key={headerGroup.id} style={{ borderBottom: '1px solid var(--mui-palette-divider)' }}>
                 {headerGroup.headers.map(header => (
                   <th
                     key={header.id}
                     style={{
-                      width: header.getSize()
+                      width: header.getSize(),
+                      background: 'none'
                     }}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -43,19 +45,28 @@ export const DataTable = <DataType,>({ table, tableTop, tableBottom }: Props<Dat
           <tbody>
             {table.getRowModel().rows?.map(row => {
               return (
-                <tr key={row.id} className={cn(row.getIsSelected() && 'selected')}>
+                <tr key={row.id} className={cn(row.getIsSelected() && 'selected')} {...getBodyRowProps?.(row)}>
                   {row.getVisibleCells().map(cell => (
                     <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                   ))}
                 </tr>
               )
             })}
+
+            {/* no data */}
+            {table.getRowModel().rows?.length === 0 && (
+              <tr>
+                <td colSpan={table.getAllLeafColumns().length} className='text-center'>
+                  データがありません
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
       {tableBottom?.map((element, index) => (
         <Fragment key={`table-bottom-element-${index}`}>
-          {element && index > 0 ? <Divider /> : null}
+          {element ? <Divider /> : null}
           {element}
         </Fragment>
       ))}

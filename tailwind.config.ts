@@ -8,7 +8,11 @@ const config: Config = {
   important: '#__next',
   plugins: [require('tailwindcss-logical'), require('./src/base/@core/tailwind/plugin')],
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        backgroundTableHeader: 'var(--mui-palette-customColors-tableHeaderBg)'
+      }
+    }
   }
 }
 

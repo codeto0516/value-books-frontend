@@ -5,21 +5,22 @@ import { useMediaQuery } from '@mui/material'
 import { cn } from '@/shared/utils/cn'
 
 // 使用例
-// <Table>
-//   <Table.Header>
-//     <Table.Row>
-//       <Table.Head>Header 1</Table.Head>
-//       <Table.Head>Header 2</Table.Head>
-//     </Table.Row>
-//   </Table.Header>
-//   <Table.Body>
-//     <Table.Row>
-//       <Table.Cell>Cell 1</Table.Cell>
-//       <Table.Cell>Cell 2</Table.Cell>
-//     </Table.Row>
-//   </Table.Body>
-// </Table>
-//
+{
+  /* <Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Header 1</Table.Head>
+      <Table.Head>Header 2</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell>Cell 1</Table.Cell>
+      <Table.Cell>Cell 2</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table> */
+}
 
 // const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
 
@@ -145,7 +146,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         className={cn(
           `
         font-medium text-sm tracking-wider text-center leading-snug
-        bg-tableHeader
+        bg-backgroundTableHeader
         border-t border-r
         border-table border-solid
         px-1.5 py-1

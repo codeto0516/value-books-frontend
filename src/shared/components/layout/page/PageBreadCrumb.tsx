@@ -4,7 +4,7 @@ import { memo } from 'react'
 import { IoMdHome } from 'react-icons/io'
 
 interface PageBreadCrumbProps {
-  breadcrumb: PageBreadCrumb[]
+  breadcrumb?: PageBreadCrumb[]
 }
 
 export interface PageBreadCrumb {
@@ -13,6 +13,10 @@ export interface PageBreadCrumb {
 }
 
 export const PageBreadCrumb = memo(({ breadcrumb }: PageBreadCrumbProps) => {
+  if (!breadcrumb || breadcrumb.length === 0) {
+    return null
+  }
+
   return (
     <Breadcrumbs aria-label='breadcrumb' sx={{ width: '100%' }}>
       <Link href='/dashboard' passHref legacyBehavior>
