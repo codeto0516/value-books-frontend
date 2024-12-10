@@ -46,19 +46,24 @@ const verticalMenuData = ({ isAdmin }: { isAdmin: boolean }): VerticalMenuDataTy
           icon: <DashboardFeatureIcon />
         },
         {
-          label: '購入管理',
-          href: '/purchase',
-          icon: <TbReportMoney />
-        },
-        {
           label: '書籍管理',
           href: '/book',
           icon: <IoMdBook />
         },
         {
+          label: '購入管理',
+          href: '/purchase',
+          icon: <TbReportMoney />
+        },
+        {
           label: 'タグ管理',
           href: '/tag',
           icon: <CiShoppingTag />
+        },
+        {
+          label: 'ロードマップ',
+          href: '/book',
+          icon: <IoMdBook />
         }
       ]
 
