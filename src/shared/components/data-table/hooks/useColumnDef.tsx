@@ -86,7 +86,7 @@ interface UserCellProps<TData> extends BaseCellProps {
   value?: string
   defaultValue?: string
   transform?: (props: AllData<TData>) => ReactNode
-  src?: string // Link
+  src?: string | ((props: AllData<TData>) => string)
   avatarProps?:
     | {
         size?: number
@@ -224,10 +224,13 @@ export const useColumnDef = <TData,>() => {
                 ? props.avatarProps({ value: convertedValue, row, column, table })
                 : props.avatarProps
 
+            const src =
+              typeof props.src === 'function' ? props.src({ value: convertedValue, row, column, table }) : props.src
+
             return (
               <div className={cn(getFlexAlignClass(props.align), 'flex items-center gap-2')}>
                 <Avatar
-                  src={props.src}
+                  src={src}
                   sx={{
                     width: avatarProps?.size ?? 24,
                     height: avatarProps?.size ?? 24

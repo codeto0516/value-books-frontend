@@ -1,4 +1,4 @@
-import { StaffListPage } from '@/features/staff/pages/StaffListPage'
+import { StaffListPage } from '@/features/user/pages/StaffListPage'
 
 export default function Page() {
   return <StaffListPage />

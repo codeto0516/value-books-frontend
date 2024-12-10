@@ -1,32 +1,41 @@
-import { Button, Card, CardContent, Grid, TextField, Typography } from '@mui/material'
-import type { Purchase } from '../types/Purchase'
+import { Card, CardContent, Divider, Grid, Typography } from '@mui/material'
+import type { ResponsePurchase } from '../types/Purchase'
 import { useDataTable } from '@/shared/components/data-table/hooks/useDataTable'
 import { useColumnDef } from '@/shared/components/data-table/hooks/useColumnDef'
 import { createColumnHelper } from '@tanstack/react-table'
 import { DataTable } from '@/shared/components/data-table'
 import type { SingleType } from '@/shared/types/singleType'
 import { DotStatus } from '@/shared/components/dot-status'
+import { PurchaseOperationEnum } from '../types/purchase-operation.enum'
+import { RHFDatePicker } from '@/shared/components/date-picker'
+import { RHFTextField } from '@/shared/components/text-field'
+import { RHFNumberField } from '@/shared/components/number-field'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { RiSendPlaneLine } from 'react-icons/ri'
 
 interface Props {
-  purchase: Purchase
+  purchase: ResponsePurchase
+  isLoading: boolean
+  onRequest: () => void
+  onDelete: () => void
 }
 
 export const PurchaseEditForm = (props: Props) => {
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} sm={12} md={8} lg={9} order={{ xs: 2, sm: 2, md: 1 }}>
         <EditCard {...props} />
       </Grid>
-      <Grid item xs={12} md={3}>
-        <ActionCard />
+      <Grid item xs={12} sm={12} md={4} lg={3} order={{ xs: 1, sm: 1, md: 2 }}>
+        <ActionCard {...props} />
       </Grid>
     </Grid>
   )
 }
 
 const EditCard = (props: Props) => {
-  const columnDef = useColumnDef<SingleType<Purchase['updatedHistories']>>()
-  const columnHelper = createColumnHelper<SingleType<Purchase['updatedHistories']>>()
+  const columnDef = useColumnDef<SingleType<ResponsePurchase['histories']>>()
+  const columnHelper = createColumnHelper<SingleType<ResponsePurchase['histories']>>()
 
   const columns = [
     columnHelper.accessor('createdAt', {
@@ -35,7 +44,7 @@ const EditCard = (props: Props) => {
       maxSize: 100,
       minSize: 100
     }),
-    columnHelper.accessor('updatedUserName', {
+    columnHelper.accessor('operatedUser.name', {
       header: columnDef.header({ value: 'ユーザー', align: 'left' }),
       cell: columnDef.cell({ variant: 'avatar', align: 'left', src: '/images/avatars/1.png' }),
       maxSize: 100,
@@ -48,14 +57,12 @@ const EditCard = (props: Props) => {
         variant: 'number',
         align: 'center',
         transform: ({ row }) => {
-          const Dot = () => <span className='w-2 h-2 rounded-full inline-block' />
-
-          switch (row.original.operationId) {
-            case 1:
+          switch (row.original.operation) {
+            case PurchaseOperationEnum.REQUEST:
               return <DotStatus color='success'>申請</DotStatus>
-            case 2:
+            case PurchaseOperationEnum.APPROVE:
               return <DotStatus color='warning'>承認</DotStatus>
-            case 3:
+            case PurchaseOperationEnum.REFUND:
               return <DotStatus color='error'>却下</DotStatus>
           }
         }
@@ -72,8 +79,8 @@ const EditCard = (props: Props) => {
     })
   ]
 
-  const { table } = useDataTable<SingleType<Purchase['updatedHistories']>>({
-    data: props.purchase.updatedHistories,
+  const { table } = useDataTable<SingleType<ResponsePurchase['histories']>>({
+    data: props.purchase.histories,
     columns
   })
 
@@ -85,21 +92,18 @@ const EditCard = (props: Props) => {
             <Grid container spacing={6}>
               <Grid item xs={2}>
                 <img
-                  src={props.purchase.bookThumbnail}
-                  alt={props.purchase.bookName}
+                  src={props.purchase.book.thumbnailLink}
+                  alt={props.purchase.book.title}
                   className='w-full object-center'
                 />
               </Grid>
               <Grid item container xs={10} spacing={4}>
                 <Grid item xs={12}>
-                  <Typography variant='h4'>{props.purchase.bookName}</Typography>
-                  <Typography variant='caption'>{props.purchase.bookAuthor}</Typography>
+                  <Typography variant='h4'>{props.purchase?.book?.title}</Typography>
+                  <Typography variant='caption'>{props.purchase?.book?.author}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant='body2'>
-                    銀の弾丸、OOUI。操作性と開発効率の劇的な向上
-                    オブジェクト指向ユーザーインターフェース(OOUI)とは、オブジェクト(もの、名詞)を起点としてUIを設計すること。タスク(やること、動詞)を起点としたUIに比べて、画面数が減って作業効率が高まり、また開発効率や拡張性も向上する、いわば「銀の弾丸」的な効果を持ちます。ブログや雑誌記事などで大きな反響を得たこの設計手法について、前半部では理論やプロセスを詳説。そして後半部の「ワークアウト(実践演習)」では18の課題に読者がチャレンジ。実際に考え、手を動かし、試行錯誤をすることにより、OOUIの設計手法を体得できます。
-                  </Typography>
+                  <Typography variant='body2'>{props.purchase?.book?.description}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -113,24 +117,36 @@ const EditCard = (props: Props) => {
   )
 }
 
-const ActionCard = () => {
+const ActionCard = (props: Props) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
           <CardContent className='flex flex-col gap-4'>
-            <TextField type='date' fullWidth size='small' />
-            <TextField type='number' fullWidth label='金額' size='small' />
-            <TextField type='text' fullWidth label='詳細' multiline minRows={3} size='small' />
-            <TextField type='number' fullWidth label='タグ' size='small' />
-            <Button
+            <RHFDatePicker name='purchasedAt' label='購入日' />
+            <RHFNumberField name='price' label='金額' />
+            <RHFTextField name='comment' label='詳細' multiline minRows={3} />
+            <LoadingButton
               fullWidth
               variant='contained'
-              className='capitalize'
-              startIcon={<i className='ri-send-plane-line' />}
+              color='primary'
+              startIcon={<RiSendPlaneLine />}
+              loading={props.isLoading}
+              onClick={props.onRequest}
             >
               申請する
-            </Button>
+            </LoadingButton>
+            <Divider />
+            <LoadingButton
+              fullWidth
+              variant='text'
+              color='error'
+              size='small'
+              loading={props.isLoading}
+              onClick={props.onDelete}
+            >
+              申請キャンセル
+            </LoadingButton>
           </CardContent>
         </Card>
       </Grid>

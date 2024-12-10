@@ -1,38 +1,45 @@
 'use client'
 
-import { Button, Select, Grid, TextField, Typography, IconButton } from '@mui/material'
+import { Button, Grid, TextField, Typography, IconButton } from '@mui/material'
 import { DataTable } from '@/shared/components/data-table'
 import { useDataTable } from '@/shared/components/data-table/hooks/useDataTable'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useColumnDef } from '@/shared/components/data-table/hooks/useColumnDef'
 import { DataTableSearchBar } from '@/shared/components/data-table/components/DataTableSearchBar'
-import { DataTableCheckboxActions } from '@/shared/components/data-table/components/DataTableCheckboxActions'
-import { NewIcon, PublishedIcon, PurchaseFeatureIcon, UnPublishedIcon } from '@/shared/components/icon'
-import { useState } from 'react'
-import { cn } from '@/shared/utils/cn'
+import { NewIcon, PurchaseFeatureIcon } from '@/shared/components/icon'
 import { PageLayout } from '@/shared/components/layout/page/PageLayout'
-import type { Purchase } from '../types/Purchase'
-import { purchaseDemoData } from '../constants/demoData'
+import type { ResponsePurchase } from '../types/Purchase'
 import { FaSearch } from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
+import { useFetchPurchaseAll } from '../api/usePurchaseApi'
+import { PurchaseStatusEnum } from '../types/purchase-status.enum'
+import Link from 'next/link'
 
 export const PurchaseListPage = () => {
+  return <FetchComponent />
+}
+
+const FetchComponent = () => {
+  const purchaseAllFetcher = useFetchPurchaseAll()
+
+  if (purchaseAllFetcher.isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (purchaseAllFetcher.error) {
+    return <div>Error</div>
+  }
+
+  return <MainComponent purchases={purchaseAllFetcher.data ?? []} />
+}
+
+const MainComponent = ({ purchases }: { purchases: ResponsePurchase[] }) => {
   const router = useRouter()
-  const columnDef = useColumnDef<Purchase>()
-  const columnHelper = createColumnHelper<Purchase>()
+  const columnDef = useColumnDef<ResponsePurchase>()
+  const columnHelper = createColumnHelper<ResponsePurchase>()
 
   const columns = [
-    // columnHelper.display({
-    //   id: 'selection',
-    //   header: columnDef.header({ variant: 'checkbox' }),
-    //   cell: columnDef.cell({
-    //     variant: 'checkbox'
-    //   }),
-    //   maxSize: 50,
-    //   minSize: 50
-    // }),
-
-    columnHelper.accessor('bookName', {
+    columnHelper.accessor('book.title', {
       header: columnDef.header({ value: 'タイトル', sortable: true }),
       cell: columnDef.cell({
         variant: 'text',
@@ -40,10 +47,10 @@ export const PurchaseListPage = () => {
         transform: ({ row }) => {
           return (
             <div className='flex gap-2 items-center'>
-              <img src={row.original.bookThumbnail} className='w-16 h-16 object-contain' />
+              <img src={row.original?.book?.thumbnailLink} className='w-16 h-16 object-contain' />
               <div>
-                <Typography variant='body1'>{row.original.bookName}</Typography>
-                <Typography variant='caption'>{row.original.bookAuthor}</Typography>
+                <Typography variant='body1'>{row.original?.book?.title}</Typography>
+                <Typography variant='caption'>{row.original.book?.author}</Typography>
               </div>
             </div>
           )
@@ -51,7 +58,7 @@ export const PurchaseListPage = () => {
       }),
       minSize: 400
     }),
-    columnHelper.accessor('amount', {
+    columnHelper.accessor('price', {
       header: columnDef.header({ value: '金額', align: 'center', sortable: true }),
       cell: columnDef.cell({
         variant: 'number',
@@ -59,45 +66,55 @@ export const PurchaseListPage = () => {
       }),
       minSize: 100
     }),
-    columnHelper.accessor('status', {
-      header: columnDef.header({ value: 'ステータス', sortable: true }),
-      cell: columnDef.cell({
-        variant: 'chip',
-        align: 'left',
-        chipProps: ({ row }) => ({
-          color: (() => {
-            switch (row.original.statusId) {
-              case 1:
-                return 'secondary'
-              case 2:
-                return 'info'
-              case 3:
-                return 'success'
-              default:
-                return 'secondary'
-            }
-          })()
-        })
-      }),
-      maxSize: 100,
-      minSize: 100
-    }),
-
-    // columnHelper.accessor(
-    //   row => {
-    //     return row.categories.map(Purchase => Purchase.name).join(', ')
-    //   },
-    //   {
-    //     id: 'categories',
-    //     header: columnDef.header({ value: 'カテゴリー', sortable: true }),
-    //     cell: columnDef.cell({ variant: 'text', align: 'left' }),
-    //     maxSize: 150,
-    //     minSize: 150
-    //   }
-    // ),
-    columnHelper.accessor('requestedUserName', {
+    columnHelper.accessor(
+      row => {
+        switch (row.status) {
+          case PurchaseStatusEnum.REQUEST:
+            return '申請中'
+          case PurchaseStatusEnum.CANCEL:
+            return 'キャンセル'
+          case PurchaseStatusEnum.REFUND:
+            return '拒否'
+          case PurchaseStatusEnum.APPROVE:
+            return '承認済み'
+          default:
+            return ''
+        }
+      },
+      {
+        id: 'status',
+        header: columnDef.header({ value: 'ステータス', sortable: true }),
+        cell: columnDef.cell({
+          variant: 'chip',
+          align: 'left',
+          chipProps: ({ row }) => ({
+            color: (() => {
+              switch (row.original.status) {
+                case PurchaseStatusEnum.REQUEST:
+                  return 'warning'
+                case PurchaseStatusEnum.CANCEL:
+                  return 'secondary'
+                case PurchaseStatusEnum.REFUND:
+                  return 'error'
+                case PurchaseStatusEnum.APPROVE:
+                  return 'success'
+                default:
+                  return 'default'
+              }
+            })()
+          })
+        }),
+        maxSize: 100,
+        minSize: 100
+      }
+    ),
+    columnHelper.accessor('createdUser.name', {
       header: columnDef.header({ value: '申請者', align: 'center', sortable: true }),
-      cell: columnDef.cell({ variant: 'avatar', align: 'center', src: '/images/avatars/1.png' }),
+      cell: columnDef.cell({
+        variant: 'avatar',
+        align: 'center',
+        src: ({ row }) => row.original.createdUser.avatar ?? ''
+      }),
       maxSize: 100,
       minSize: 100
     }),
@@ -125,12 +142,10 @@ export const PurchaseListPage = () => {
     // })
   ]
 
-  const { table } = useDataTable<Purchase>({
-    data: purchaseDemoData,
+  const { table } = useDataTable<ResponsePurchase>({
+    data: purchases,
     columns
   })
-
-  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
 
   return (
     <PageLayout icon={<PurchaseFeatureIcon />} title='購入管理'>
@@ -163,75 +178,14 @@ export const PurchaseListPage = () => {
                 />
               ]}
               actions={[
-                <Button key='new' variant='contained' color='primary' startIcon={<NewIcon />}>
-                  新規申請
-                </Button>
-              ]}
-            />,
-            isFilterOpen && (
-              <div key={'ddsfd'} className='px-4 py-3'>
-                <div className='flex flex-col gap-4'>
-                  <div className='flex flex-row gap-2 items-center'>
-                    <Select key='status' variant='outlined' label='ステータス' className='w-[200px]' size='small' />
-                    <Select key='status' variant='outlined' label='ステータス' className='w-[200px]' size='small' />
-                    <Select key='status' variant='outlined' label='ステータス' className='w-[200px]' size='small' />
-                    <Select key='status' variant='outlined' label='ステータス' className='w-[200px]' size='small' />
-                    <Select key='status' variant='outlined' label='ステータス' className='w-[200px]' size='small' />
-                  </div>
-                  <div className='flex flex-row gap-2 justify-end'>
-                    <Button variant='text' color='secondary' onClick={() => setIsFilterOpen(false)}>
-                      閉じる
-                    </Button>
-                    <Button variant='outlined' color='primary'>
-                      検索
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ),
-            <div key='top-pagination' className='flex flex-row justify-between items-center'>
-              <DataTableCheckboxActions
-                actions={[
-                  <Button
-                    key={'edit'}
-                    variant='text'
-                    color='primary'
-                    startIcon={<PublishedIcon />}
-                    className={cn(table.getSelectedRowModel().rows.length === 0 && 'hidden')}
-                  >
-                    一括公開
-                  </Button>,
-                  <Button
-                    key={'edit'}
-                    variant='text'
-                    color='error'
-                    startIcon={<UnPublishedIcon />}
-                    className={cn(table.getSelectedRowModel().rows.length === 0 && 'hidden')}
-                  >
-                    一括非公開
+                <Link key='new' href='/purchase/new'>
+                  <Button key='new' variant='contained' color='primary' startIcon={<NewIcon />}>
+                    新規申請
                   </Button>
-
-                  // <PublishedIconButton
-                  //   key={'edit'}
-                  //   size='small'
-                  //   className={cn(table.getSelectedRowModel().rows.length === 0 && 'hidden')}
-                  //   color='primary'
-                  //   tooltip='一括公開'
-                  // />,
-                  // <UnPublishedIconButton
-                  //   key={'edit'}
-                  //   size='small'
-                  //   className={cn(table.getSelectedRowModel().rows.length === 0 && 'hidden')}
-                  //   color='error'
-                  //   tooltip='一括非公開'
-                  // />
-                ]}
-              />
-              {/* <DataTablePagination table={table} /> */}
-            </div>
+                </Link>
+              ]}
+            />
           ]}
-          // tableBottom={[<DataTablePagination key='bottom-pagination' table={table} />]}
-
           getBodyRowProps={row => ({
             className: 'hover:bg-actionHover cursor-pointer',
             onClick: () => router.push(`/purchase/${row.original.id}`)
