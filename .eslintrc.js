@@ -50,11 +50,11 @@ module.exports = {
     'lines-around-comment': [
       'error',
       {
-        beforeBlockComment: true, // ブロックコメントの前に空行を入れる
-        beforeLineComment: true, // 行コメントの前に空行を入れる
-        allowBlockStart: true, // ブロックの始まりに空行を許可
-        allowObjectStart: true, // オブジェクトの開始部分に空行を許可
-        allowArrayStart: true // 配列の開始部分に空行を許可
+        beforeBlockComment: false, // ブロックコメントの前に空行を入れる
+        beforeLineComment: false, // 行コメントの前に空行を入れる
+        allowBlockStart: false, // ブロックの始まりに空行を許可
+        allowObjectStart: false, // オブジェクトの開始部分に空行を許可
+        allowArrayStart: false // 配列の開始部分に空行を許可
       }
     ],
 

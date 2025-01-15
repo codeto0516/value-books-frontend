@@ -62,7 +62,7 @@ const verticalMenuData = ({ isAdmin }: { isAdmin: boolean }): VerticalMenuDataTy
         },
         {
           label: 'ロードマップ',
-          href: '/book',
+          href: '/loadmap',
           icon: <IoMdBook />
         }
       ]

@@ -1,5 +1,14 @@
 import { IconButton, Tooltip } from '@mui/material'
-import { DeleteIcon, DetailIcon, EditIcon, PublishedIcon, RefreshIcon, SaveIcon, UnPublishedIcon } from '../icon'
+import {
+  DeleteIcon,
+  DetailIcon,
+  DotMenuIcon,
+  EditIcon,
+  PublishedIcon,
+  RefreshIcon,
+  SaveIcon,
+  UnPublishedIcon
+} from '../icon'
 
 interface BasicAbstractIconButtonProps extends React.ComponentProps<typeof IconButton> {
   icon: React.ReactNode
@@ -49,4 +58,8 @@ export const PublishedIconButton = (props: BasicIconButtonProps) => (
 
 export const UnPublishedIconButton = (props: BasicIconButtonProps) => (
   <BasicAbstractIconButton tooltip='非公開' icon={<UnPublishedIcon />} {...props} />
+)
+
+export const DotMenuIconButton = (props: BasicIconButtonProps) => (
+  <BasicAbstractIconButton tooltip='メニュー' icon={<DotMenuIcon />} {...props} />
 )

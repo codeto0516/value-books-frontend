@@ -1,20 +1,27 @@
 import Card from '@mui/material/Card'
 import { flexRender } from '@tanstack/react-table'
-import type { Row, Table } from '@tanstack/react-table'
+import type { Cell, Row, Table } from '@tanstack/react-table'
 
 import styles from '@core/styles/table.module.css'
 import { Fragment, type ReactElement } from 'react'
 import { Divider } from '@mui/material'
 import { cn } from '@/shared/utils/cn'
 
-interface Props<DataType> {
-  table: Table<DataType>
+interface Props<TData, TValue> {
+  table: Table<TData>
   tableTop?: (ReactElement | null | undefined | false)[]
   tableBottom?: (ReactElement | null | undefined | false)[]
-  getBodyRowProps?: (row: Row<DataType>) => Record<string, unknown>
+  getBodyRowProps?: (row: Row<TData>) => Record<string, unknown>
+  getBodyCellProps?: (cell: Cell<TData, TValue>) => Record<string, unknown>
 }
 
-export const DataTable = <DataType,>({ table, tableTop, tableBottom, getBodyRowProps }: Props<DataType>) => {
+export const DataTable = <TData, TValue>({
+  table,
+  tableTop,
+  tableBottom,
+  getBodyRowProps,
+  getBodyCellProps
+}: Props<TData, TValue>) => {
   return (
     <Card className='w-full border-none'>
       {tableTop?.map((element, index) => (
@@ -47,7 +54,9 @@ export const DataTable = <DataType,>({ table, tableTop, tableBottom, getBodyRowP
               return (
                 <tr key={row.id} className={cn(row.getIsSelected() && 'selected')} {...getBodyRowProps?.(row)}>
                   {row.getVisibleCells().map(cell => (
-                    <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                    <td key={cell.id} {...getBodyCellProps?.(cell)}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
                   ))}
                 </tr>
               )

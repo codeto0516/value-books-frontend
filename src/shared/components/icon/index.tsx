@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md'
 import { RxDashboard } from 'react-icons/rx'
 import { TbCategoryPlus, TbReportMoney } from 'react-icons/tb'
+import { HiOutlineDotsVertical } from 'react-icons/hi'
 
 interface IconProps extends IconBaseProps {}
 
@@ -25,7 +26,7 @@ const featureIconDefaultProps: IconProps = {
 
 export const DashboardFeatureIcon = (props: IconProps) => <RxDashboard {...featureIconDefaultProps} {...props} />
 export const PurchaseFeatureIcon = (props: IconProps) => <TbReportMoney {...featureIconDefaultProps} {...props} />
-export const CategoryFeatureIcon = (props: IconProps) => <TbCategoryPlus {...featureIconDefaultProps} {...props} />
+export const BookFeatureIcon = (props: IconProps) => <TbCategoryPlus {...featureIconDefaultProps} {...props} />
 export const MediaFeatureIcon = (props: IconProps) => <MdOutlinePermMedia {...featureIconDefaultProps} {...props} />
 export const StaffFeatureIcon = (props: IconProps) => <FaRegUser {...featureIconDefaultProps} {...props} />
 export const GeneralSettingFeatureIcon = (props: IconProps) => (
@@ -48,3 +49,4 @@ export const SaveIcon = (props: IconProps) => <FaSave {...props} />
 export const RefreshIcon = (props: IconProps) => <LuRefreshCcwDot {...props} />
 export const PublishedIcon = (props: IconProps) => <MdOutlinePublishedWithChanges {...props} />
 export const UnPublishedIcon = (props: IconProps) => <MdOutlineUnpublished {...props} />
+export const DotMenuIcon = (props: IconProps) => <HiOutlineDotsVertical {...props} />

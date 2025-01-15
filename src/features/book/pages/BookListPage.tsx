@@ -6,21 +6,22 @@ import { useDataTable } from '@/shared/components/data-table/hooks/useDataTable'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useColumnDef } from '@/shared/components/data-table/hooks/useColumnDef'
 import { DataTableSearchBar } from '@/shared/components/data-table/components/DataTableSearchBar'
-import { NewIcon, PurchaseFeatureIcon } from '@/shared/components/icon'
 import { PageLayout } from '@/shared/components/layout/page/PageLayout'
-import type { ResponsePurchase } from '../types/Purchase'
 import { FaSearch } from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
-import { useFetchPurchaseAll } from '../api/usePurchaseApi'
-import { PurchaseStatusEnum } from '../types/purchase-status.enum'
 import Link from 'next/link'
+import type { ResponseBook } from '../types/book'
+import { useFetchBookAll } from '../api/useBookApi'
+import { BookStatusEnum, BookStatusTextEnum } from '../types/book-status.enum'
+import { BookFeatureIcon, NewIcon } from '@/shared/components/icon'
+import { DotMenuIconButton } from '@/shared/components/button/IconButtons'
 
-export const PurchaseListPage = () => {
+export const BookListPage = () => {
   return <FetchComponent />
 }
 
 const FetchComponent = () => {
-  const purchaseAllFetcher = useFetchPurchaseAll()
+  const purchaseAllFetcher = useFetchBookAll()
 
   if (purchaseAllFetcher.isLoading) {
     return <div>Loading...</div>
@@ -33,12 +34,22 @@ const FetchComponent = () => {
   return <MainComponent purchases={purchaseAllFetcher.data ?? []} />
 }
 
-const MainComponent = ({ purchases }: { purchases: ResponsePurchase[] }) => {
+const MainComponent = ({ purchases }: { purchases: ResponseBook[] }) => {
   const router = useRouter()
-  const columnDef = useColumnDef<ResponsePurchase>()
-  const columnHelper = createColumnHelper<ResponsePurchase>()
+  const columnDef = useColumnDef<ResponseBook>()
+  const columnHelper = createColumnHelper<ResponseBook>()
 
   const columns = [
+    columnHelper.display({
+      id: 'selection',
+      header: columnDef.header({ value: '' }),
+      cell: columnDef.cell({
+        variant: 'checkbox',
+        align: 'center'
+      }),
+      maxSize: 50,
+      minSize: 50
+    }),
     columnHelper.accessor('book.title', {
       header: columnDef.header({ value: 'タイトル', sortable: true }),
       cell: columnDef.cell({
@@ -58,25 +69,23 @@ const MainComponent = ({ purchases }: { purchases: ResponsePurchase[] }) => {
       }),
       minSize: 400
     }),
-    columnHelper.accessor('price', {
-      header: columnDef.header({ value: '金額', align: 'center', sortable: true }),
-      cell: columnDef.cell({
-        variant: 'number',
-        align: 'center'
-      }),
-      minSize: 100
-    }),
     columnHelper.accessor(
       row => {
         switch (row.status) {
-          case PurchaseStatusEnum.REQUEST:
-            return '申請中'
-          case PurchaseStatusEnum.CANCEL:
-            return 'キャンセル'
-          case PurchaseStatusEnum.REFUND:
-            return '拒否'
-          case PurchaseStatusEnum.APPROVE:
-            return '承認済み'
+          case BookStatusEnum.Available:
+            return BookStatusTextEnum.Available
+          case BookStatusEnum.OnBorrow:
+            return BookStatusTextEnum.OnBorrow
+          case BookStatusEnum.Reserved:
+            return BookStatusTextEnum.Reserved
+          case BookStatusEnum.Overdue:
+            return BookStatusTextEnum.Overdue
+          case BookStatusEnum.Lost:
+            return BookStatusTextEnum.Lost
+          case BookStatusEnum.InRepair:
+            return BookStatusTextEnum.InRepair
+          case BookStatusEnum.Withdrawn:
+            return BookStatusTextEnum.Withdrawn
           default:
             return ''
         }
@@ -90,14 +99,20 @@ const MainComponent = ({ purchases }: { purchases: ResponsePurchase[] }) => {
           chipProps: ({ row }) => ({
             color: (() => {
               switch (row.original.status) {
-                case PurchaseStatusEnum.REQUEST:
-                  return 'warning'
-                case PurchaseStatusEnum.CANCEL:
-                  return 'secondary'
-                case PurchaseStatusEnum.REFUND:
-                  return 'error'
-                case PurchaseStatusEnum.APPROVE:
+                case BookStatusEnum.Available:
                   return 'success'
+                case BookStatusEnum.OnBorrow:
+                  return 'primary'
+                case BookStatusEnum.Reserved:
+                  return 'warning'
+                case BookStatusEnum.Overdue:
+                  return 'error'
+                case BookStatusEnum.Lost:
+                  return 'error'
+                case BookStatusEnum.InRepair:
+                  return 'error'
+                case BookStatusEnum.Withdrawn:
+                  return 'error'
                 default:
                   return 'default'
               }
@@ -109,7 +124,7 @@ const MainComponent = ({ purchases }: { purchases: ResponsePurchase[] }) => {
       }
     ),
     columnHelper.accessor('createdUser.name', {
-      header: columnDef.header({ value: '申請者', align: 'center', sortable: true }),
+      header: columnDef.header({ value: '貸出者', align: 'center', sortable: true }),
       cell: columnDef.cell({
         variant: 'avatar',
         align: 'center',
@@ -119,36 +134,37 @@ const MainComponent = ({ purchases }: { purchases: ResponsePurchase[] }) => {
       minSize: 100
     }),
     columnHelper.accessor('createdAt', {
-      header: columnDef.header({ value: '申請日', align: 'center', sortable: true }),
+      header: columnDef.header({ value: '貸出日', align: 'center', sortable: true }),
       cell: columnDef.cell({ variant: 'date', align: 'center' }),
       maxSize: 100,
       minSize: 100
+    }),
+    columnHelper.accessor('createdAt', {
+      header: columnDef.header({ value: '返却予定日', align: 'center', sortable: true }),
+      cell: columnDef.cell({ variant: 'date', align: 'center' }),
+      maxSize: 100,
+      minSize: 100
+    }),
+    columnHelper.display({
+      id: 'action',
+      header: columnDef.header({ value: '' }),
+      cell: columnDef.cell({
+        variant: 'action',
+        align: 'right',
+        actions: ({ row }) => [<DotMenuIconButton key='menu' />]
+      }),
+      maxSize: 50,
+      minSize: 50
     })
-
-    // columnHelper.display({
-    //   id: 'action',
-    //   header: columnDef.header({ value: '' }),
-    //   cell: columnDef.cell({
-    //     variant: 'action',
-    //     align: 'right',
-    //     actions: ({ row }) => [
-    //       <Link key='edit' href={`/Purchase/${row.original.id}`}>
-    //         <EditIconButton />
-    //       </Link>
-    //     ]
-    //   }),
-    //   maxSize: 50,
-    //   minSize: 50
-    // })
   ]
 
-  const { table } = useDataTable<ResponsePurchase>({
+  const { table } = useDataTable<ResponseBook>({
     data: purchases,
     columns
   })
 
   return (
-    <PageLayout icon={<PurchaseFeatureIcon />} title='購入管理'>
+    <PageLayout icon={<BookFeatureIcon />} title='書籍管理'>
       <Grid item xs={12}>
         <DataTable
           table={table}
@@ -187,8 +203,14 @@ const MainComponent = ({ purchases }: { purchases: ResponsePurchase[] }) => {
             />
           ]}
           getBodyRowProps={row => ({
-            className: 'hover:bg-actionHover cursor-pointer',
-            onClick: () => router.push(`/purchase/${row.original.id}`)
+            className: 'hover:bg-actionHover cursor-pointer'
+          })}
+          getBodyCellProps={cell => ({
+            onClick: () => {
+              if (['action', 'selection'].includes(cell.column.id)) {
+                router.push(`/purchase/${cell.row.original.id}`)
+              }
+            }
           })}
         />
       </Grid>
